@@ -10,7 +10,7 @@ http.createServer(function (req, res) {
         return callback(req, res);
     // Далее делаем все что нам нужно
     res.end("Error 404");
-}).listen(80);
+}).listen(8010);
 
 // Включаем оптимизацию через execute
 // Собирает все запросы и выполняет пачками раз в 334мс
