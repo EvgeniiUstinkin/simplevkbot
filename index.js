@@ -15,16 +15,16 @@ http.createServer(function (req, res) {
 vk.init_execute_cart();
 
 vk.on("message",function (event, msg) {
-console.log("event",event);
-console.log("msg",msg);
-  vkHelper.vk_groups_isMember(vk, consts.public_id,'8326796').then(function (res) {
-    if(res==1){
-      msg.send("Текущее время сервера",tools.getServerDateTime());
-    }
-    else{
-      msg.send("Перед тем, как я отправлю тебе ответ - подпишись на меня", " https://vk.com/public"+consts.public_id);
-    }
-  })
+  if(!msg.out){
+    vkHelper.vk_groups_isMember(vk, consts.public_id, msg.user_id).then(function (res) {
+      if(res==1){
+        msg.send("Текущее время сервера",tools.getServerDateTime());
+      }
+      else{
+        msg.send("Перед тем, как я отправлю тебе ответ - подпишись на меня", " https://vk.com/public"+consts.public_id);
+      }
+    })
+  }
   event.ok();
 });
 
