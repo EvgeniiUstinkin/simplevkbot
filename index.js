@@ -3,9 +3,9 @@ tools = require('./tools'),
 consts = require('./consts'),
 vkHelper = require('./vkhelper'),
 http = require("http"),
-vk = VK("83b9df8a46547ed328b4d47b76e742a7c5d778954b5991a8616c0cbc16432db74b0130f2d768c5136d443");
+vk = VK(consts.public_token);
 
-var callback = vk.init_callback_api("58d9023e");
+var callback = vk.init_callback_api(consts.vk_init_callback_api);
 http.createServer(function (req, res) {
   if(req.url == "/vk_callback_api")
   return callback(req, res);
@@ -25,14 +25,5 @@ vk.on("message",function (event, msg) {
       }
     })
   }
-  event.ok();
-});
-
-vk.on("group_leave",function (event, data) {
-  if(data.self)
-  vk.messages.send({
-    message:"Ну куда же ты :_(",
-    peer_id: data.object.user_id
-  });
   event.ok();
 });

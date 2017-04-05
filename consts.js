@@ -1,3 +1,5 @@
 module.exports = {
-    public_id: '96514311'
+    public_id: '',
+    public_token:'',
+    vk_init_callback_api:''
 };
