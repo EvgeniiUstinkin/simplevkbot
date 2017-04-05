@@ -18,10 +18,10 @@ vk.on("message",function (event, msg) {
   if(!msg.out){
     vkHelper.vk_groups_isMember(vk, consts.public_id, msg.user_id).then(function (res) {
       if(res==1){
-        msg.send("Текущее время сервера",tools.getServerDateTime());
+        msg.send("Текущее время сервера "+tools.getServerDateTime());
       }
       else{
-        msg.send("Перед тем, как я отправлю тебе ответ - подпишись на меня", " https://vk.com/public"+consts.public_id);
+        msg.send("Перед тем, как я отправлю тебе ответ - подпишись на меня https://vk.com/public"+consts.public_id);
       }
     })
   }
