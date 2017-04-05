@@ -1,35 +1,38 @@
 var VK = require("VK-Promise"),
-    http = require("http"),
-    vk = VK("83b9df8a46547ed328b4d47b76e742a7c5d778954b5991a8616c0cbc16432db74b0130f2d768c5136d443");
+tools = require('./tools'),
+consts = require('./consts'),
+vkHelper = require('./vkhelper'),
+http = require("http"),
+vk = VK("83b9df8a46547ed328b4d47b76e742a7c5d778954b5991a8616c0cbc16432db74b0130f2d768c5136d443");
 
-// Запускаем http сервер на 80 порту с обработкой Callback API
-// PS: Сервер в настройках группы нужно вешать вручную
 var callback = vk.init_callback_api("58d9023e");
 http.createServer(function (req, res) {
-    if(req.url == "/vk_callback_api") // фильтруем по url
-        return callback(req, res);
-    // Далее делаем все что нам нужно
-    res.end("Error 404");
+  if(req.url == "/vk_callback_api")
+  return callback(req, res);
+  res.end("Error 404");
 }).listen(process.env.PORT || 3010);
 
-// Включаем оптимизацию через execute
-// Собирает все запросы и выполняет пачками раз в 334мс
-// 334мс - 3 раза в секунду, стандартное ограничение
 vk.init_execute_cart();
 
-// message_new & message_reply объединяет в message
 vk.on("message",function (event, msg) {
-    msg.send("OK");
-    event.ok(); // Отвечаем callback api серверу OK
+console.log("event",event);
+console.log("msg",msg);
+  vkHelper.vk_groups_isMember(vk, consts.public_id,'8326796').then(function (res) {
+    if(res==1){
+      msg.send("Текущее время сервера",tools.getServerDateTime());
+    }
+    else{
+      msg.send("Перед тем, как я отправлю тебе ответ - подпишись на меня", " https://vk.com/public"+consts.public_id);
+    }
+  })
+  event.ok();
 });
 
-// все остальное идет в callback type
-// Например если участник вышел из сообщества
 vk.on("group_leave",function (event, data) {
-    if(data.self) // если сам вышел
-        vk.messages.send({ // Отправляем сообщени
-            message:"Ну куда же ты :_(", // текст сообщения
-            peer_id: data.object.user_id // Кому
-        });
-    event.ok();
+  if(data.self)
+  vk.messages.send({
+    message:"Ну куда же ты :_(",
+    peer_id: data.object.user_id
+  });
+  event.ok();
 });
